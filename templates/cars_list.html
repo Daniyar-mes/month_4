@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог автомобилей</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f3f6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background: #202b38;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        header p {
+            color: #cbd5e1;
+            margin-bottom: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .car-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .car-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .car-card h2 {
+            color: #202b38;
+            margin-top: 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 12px;
+        }
+
+        .car-info {
+            margin: 12px 0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .car-info strong {
+            color: #475569;
+        }
+
+        .category {
+            display: inline-block;
+            background: #e0edff;
+            color: #2563eb;
+            padding: 5px 10px;
+            margin: 4px 3px 0 0;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            color: #777;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚗 Каталог автомобилей</h1>
+    <p>Информация об автомобилях и их владельцах</p>
+</header>
+
+<div class="container">
+
+    <div class="car-container">
+
+        {% for item in car %}
+
+        <div class="car-card">
+
+            <h2>{{ item.title }}</h2>
+
+            <div class="car-info">
+                <strong>Владелец:</strong> {{ item.person }}
+            </div>
+
+            <div class="car-info">
+                <strong>VIN-код:</strong> {{ item.vin_code }}
+            </div>
+
+            <div class="car-info">
+                <strong>Описание:</strong>
+                {{ item.description|default:"Описание отсутствует" }}
+            </div>
+
+            <div class="car-info">
+                <strong>Дата добавления:</strong> {{ item.created|date:"d.m.Y" }}
+            </div>
+
+            <div class="car-info">
+                <strong>Категории:</strong><br>
+
+                {% for category in item.categories.all %}
+                    <span class="category">{{ category.name }}</span>
+                {% empty %}
+                    <span>Категории не указаны</span>
+                {% endfor %}
+
+            </div>
+
+            {% if item.statenumbercar %}
+            <div class="car-info">
+                <strong>Государственный номер:</strong>
+                {{ item.statenumbercar.number_car }}
+            </div>
+            {% endif %}
+
+            <div class="car-info">
+                <strong>Комментарии:</strong>
+
+                {% for comment in item.commentcar_set.all %}
+                    <p>
+                        {{ comment.description }}<br>
+                        ⭐ Оценка: {{ comment.mark }}/5
+                        <br>
+                        <small>{{ comment.created_at|date:"d.m.Y" }}</small>
+                    </p>
+                {% empty %}
+                    <p>Комментариев пока нет.</p>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty">
+            <h2>Автомобилей пока нет</h2>
+            <p>Добавьте первый автомобиль через административную панель Django.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<footer>
+    <p>Каталог автомобилей | Django Project</p>
+</footer>
+
+</body>
+</html>

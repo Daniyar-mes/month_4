@@ -1,0 +1,10 @@
+    <h1>Вы дейтсвительно хотите удалить абитуриента</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <button type="submit">Да</button>
+    </form>
+
+
+    <a href="{% url 'abit_list' %}">Нет| Перейти на список абитуриентов</a>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список абитуриентов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 30px;
+        }
+        h2 {
+            text-align: center;
+            color: #243b55;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .add-btn {
+            display: inline-block;
+            background: #243b55;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #243b55;
+            color: white;
+        }
+        img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .edit {
+            color: #087c36;
+        }
+        .delete {
+            color: #d62828;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Список абитуриентов</h2>
+
+    <a href="{% url 'add_abit' %}" class="add-btn">
+        + Добавить абитуриента
+    </a>
+
+    <table>
+        <tr>
+            <th>№</th>
+            <th>ФИО</th>
+            <th>Фото</th>
+            <th>Факультет</th>
+            <th>Документ ОРТ</th>
+            <th>Дата регистрации</th>
+            <th>Действия</th>
+        </tr>
+
+        {% for item in abit %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+
+            <td>{{ item.full_name }}</td>
+
+            <td>
+                {% if item.photo %}
+                    <img src="{{ item.photo.url }}" alt="Фото">
+                {% endif %}
+            </td>
+
+            <td>{{ item.facultat }}</td>
+
+            <td>
+                {% if item.document_ort %}
+                    <a href="{{ item.document_ort.url }}" target="_blank">
+                        Открыть документ
+                    </a>
+                {% endif %}
+            </td>
+
+            <td>{{ item.created_at|date:"d.m.Y" }}</td>
+
+            <td>
+                <a class="edit"
+                   href="{% url 'update_abit' item.id %}">
+                    Изменить
+                </a>
+
+                <br><br>
+
+                <a class="delete"
+                    href="{% url 'drop_abit' item.id %}">
+                        Удалить
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">Абитуриентов пока нет</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>
